@@ -108,6 +108,57 @@ void ofApp::drawPixels(std::vector<std::vector<bool>> pixels, double width, doub
 	}
 }
 
+
+void ofApp::loadImage() {
+	const std::string fileName{ "pixelArt.pmm" };
+	std::ifstream inputFile{ fileName, std::ios_base::in };
+	std::string fileType;
+
+	// Handle header
+	// get file type
+	if (inputFile) {
+		std::cout << "The " << fileName << " file opened successfully!\n";
+		// get ppm type
+		inputFile >> fileType;
+	}
+	else {
+		std::cout << "The was an issue opening the " << fileName << " file.\n";
+	}
+	// get file dimensions
+	bool isColumnCountFound = false;
+	bool isRowCountFound = false;
+	while (!inputFile.eof() || !isColumnCountFound && !isRowCountFound) {
+		std::string data;
+		inputFile >> data;
+		if (data == "#") {
+			// skip the rest of the line
+			std::getline(inputFile, data);
+		} else if (!isColumnCountFound) {
+			columns = stoi(data);
+			isColumnCountFound = true;
+
+		} else if (isColumnCountFound && !isRowCountFound) {
+			rows = stoi(data);
+			isRowCountFound = true;
+		}
+	}
+	if(!isColumnCountFound || !isRowCountFound) {
+		std::cout << "Incorrect header format. The image dimensions could not be found";
+	}
+	
+	if(!inputFile.eof()) {
+		image.resize(rows, std::vector<bool>(columns, false));
+		std::vector<bool> data{ std::istream_iterator<bool>{inputFile}, {} };
+		int dataIndex = 0;
+		for (int n{ 0 }; n < rows; n++) {
+			for (int m{ 0 }; m < columns; m++) {
+				image[n][m] = data[dataIndex++];
+			}
+		}
+	}
+}
+
+
 void ofApp::saveImage(std::vector<std::vector<bool>> pixels) {
 	std::ofstream outputFile{ "pixelArt.ppm" };
 	outputFile << "P1\n";
