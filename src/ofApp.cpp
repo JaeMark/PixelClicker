@@ -25,6 +25,10 @@ void ofApp::keyPressed(int key) {
 	if(key == 's') {
 		saveImage(image);
 	}
+
+	if (key == 'o') {
+		loadImage();
+	}
 }
 
 //--------------------------------------------------------------
@@ -110,24 +114,25 @@ void ofApp::drawPixels(std::vector<std::vector<bool>> pixels, double width, doub
 
 
 void ofApp::loadImage() {
-	const std::string fileName{ "pixelArt.pmm" };
+	const std::string fileName{ "pixelArt.ppm" };
 	std::ifstream inputFile{ fileName, std::ios_base::in };
-	std::string fileType;
 
 	// Handle header
 	// get file type
-	if (inputFile) {
+	if (!inputFile.eof()) {
 		std::cout << "The " << fileName << " file opened successfully!\n";
 		// get ppm type
+		std::string fileType;
 		inputFile >> fileType;
 	}
 	else {
 		std::cout << "The was an issue opening the " << fileName << " file.\n";
 	}
+	
 	// get file dimensions
 	bool isColumnCountFound = false;
 	bool isRowCountFound = false;
-	while (!inputFile.eof() || !isColumnCountFound && !isRowCountFound) {
+	while (!inputFile.eof()) {
 		std::string data;
 		inputFile >> data;
 		if (data == "#") {
@@ -136,10 +141,13 @@ void ofApp::loadImage() {
 		} else if (!isColumnCountFound) {
 			columns = stoi(data);
 			isColumnCountFound = true;
-
-		} else if (isColumnCountFound && !isRowCountFound) {
+		} else if (!isRowCountFound) {
 			rows = stoi(data);
 			isRowCountFound = true;
+		}
+
+		if (isColumnCountFound && isRowCountFound) {
+			break;
 		}
 	}
 	if(!isColumnCountFound || !isRowCountFound) {
@@ -147,6 +155,7 @@ void ofApp::loadImage() {
 	}
 	
 	if(!inputFile.eof()) {
+		std::cout << "Hello";
 		image.resize(rows, std::vector<bool>(columns, false));
 		std::vector<bool> data{ std::istream_iterator<bool>{inputFile}, {} };
 		int dataIndex = 0;
@@ -155,7 +164,9 @@ void ofApp::loadImage() {
 				image[n][m] = data[dataIndex++];
 			}
 		}
+		std::cout << "The " << fileName << " file data has been loaded successfully.\n";
 	}
+	
 }
 
 
@@ -176,4 +187,5 @@ void ofApp::saveImage(std::vector<std::vector<bool>> pixels) {
 		}
 	}
 	outputFile.close();
+	std::cout << "The data has been saved successfully.\n";
 }

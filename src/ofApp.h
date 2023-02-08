@@ -22,8 +22,8 @@ public:
 	void gotMessage(ofMessage msg);
 
 private:
-	int rows{ 9 };
-	int columns{ 9 };
+	int rows{ 3 };
+	int columns{ 3 };
 	double gridSizeY{ static_cast<double>(ofGetHeight()) / rows };
 	double gridSizeX{ static_cast<double>(ofGetWidth()) / columns };
 
