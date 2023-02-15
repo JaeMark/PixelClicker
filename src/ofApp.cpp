@@ -26,6 +26,10 @@ void ofApp::keyPressed(int key) {
 		saveImage(image);
 	}
 
+	if(key == 'f') {
+		saveFrame();
+	}
+
 	if (key == 'l') {
 		loadImage();
 	}
@@ -94,7 +98,7 @@ void ofApp::dragEvent(ofDragInfo dragInfo) {
 
 }
 
-void ofApp::drawPixels(std::vector<std::vector<bool>> pixels, double width, double height) {
+void ofApp::drawPixels(std::vector<std::vector<bool>> pixels, double width, double height) const {
 	for (int n{ 0 }; n < rows; n++) {
 		for (int m{ 0 }; m < columns; m++) {
 			const double lowerYBound{ gridSizeY * n };
@@ -114,7 +118,7 @@ void ofApp::drawPixels(std::vector<std::vector<bool>> pixels, double width, doub
 
 
 void ofApp::loadImage() {
-	string path;
+	std::string path;
 	ofFileDialogResult result = ofSystemLoadDialog("Load file");
 	if (result.bSuccess) {
 		path = result.getPath();
@@ -177,7 +181,7 @@ void ofApp::loadImage() {
 
 
 void ofApp::saveImage(std::vector<std::vector<bool>> pixels) const {
-	string path;
+	std::string path;
 	ofFileDialogResult result = ofSystemSaveDialog("default.ppm", "Save");
 	if (result.bSuccess) {
 		path = result.getPath();
@@ -201,4 +205,14 @@ void ofApp::saveImage(std::vector<std::vector<bool>> pixels) const {
 	}
 	outputFile.close();
 	std::cout << "The data has been saved successfully.\n";
+}
+
+void ofApp::saveFrame() const {
+	std::string path;
+	ofFileDialogResult result = ofSystemSaveDialog("default.png", "Save");
+	if (result.bSuccess) {
+		path = result.getPath();
+		// save your file to `path`
+	}
+	ofSaveScreen(path);
 }

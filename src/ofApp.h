@@ -30,8 +30,9 @@ private:
 	// initialize a matrix of false Booleans to store the grid drawing
 	std::vector<std::vector<bool>> image{ static_cast<vector<vector<bool>>::size_type>(rows),  std::vector<bool>(columns, false) };
 
-	void drawPixels(std::vector<std::vector<bool>> pixels, double width, double height);
+	void drawPixels(std::vector<std::vector<bool>> pixels, double width, double height) const;
 	void saveImage(std::vector<std::vector<bool>> pixels) const;
+	void saveFrame() const;
 	void loadImage();
 };
 
