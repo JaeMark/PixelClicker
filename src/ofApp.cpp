@@ -26,7 +26,7 @@ void ofApp::keyPressed(int key) {
 		saveImage(image);
 	}
 
-	if (key == 'o') {
+	if (key == 'l') {
 		loadImage();
 	}
 }
