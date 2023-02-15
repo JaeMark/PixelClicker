@@ -114,14 +114,21 @@ void ofApp::drawPixels(std::vector<std::vector<bool>> pixels, double width, doub
 
 
 void ofApp::loadImage() {
-	const std::string fileName{ "pixelArt.ppm" };
+	string path;
+	ofFileDialogResult result = ofSystemLoadDialog("Load file");
+	if (result.bSuccess) {
+		path = result.getPath();
+		// load your file at `path`
+	}
+
+	const std::string fileName{ path };
 	std::ifstream inputFile{ fileName, std::ios_base::in };
 
 	// Handle header
 	// get file type
 	if (!inputFile.eof()) {
 		std::cout << "The " << fileName << " file opened successfully!\n";
-		// get ppm type
+		// get and skip ppm type
 		std::string fileType;
 		inputFile >> fileType;
 	}
@@ -136,7 +143,7 @@ void ofApp::loadImage() {
 		std::string data;
 		inputFile >> data;
 		if (data == "#") {
-			// skip the rest of the line
+			// comment found; skip the rest of the line
 			std::getline(inputFile, data);
 		} else if (!isColumnCountFound) {
 			columns = stoi(data);
@@ -166,12 +173,18 @@ void ofApp::loadImage() {
 		}
 		std::cout << "The " << fileName << " file data has been loaded successfully.\n";
 	}
-	
 }
 
 
-void ofApp::saveImage(std::vector<std::vector<bool>> pixels) {
-	std::ofstream outputFile{ "pixelArt.ppm" };
+void ofApp::saveImage(std::vector<std::vector<bool>> pixels) const {
+	string path;
+	ofFileDialogResult result = ofSystemSaveDialog("default.ppm", "Save");
+	if (result.bSuccess) {
+		path = result.getPath();
+		// save your file to `path`
+	}
+
+	std::ofstream outputFile{ path };
 	outputFile << "P1\n";
 	outputFile << columns << " " << rows << "\n";
 	for (int n{ 0 }; n < rows; n++) {

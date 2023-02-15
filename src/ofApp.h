@@ -22,8 +22,8 @@ public:
 	void gotMessage(ofMessage msg);
 
 private:
-	int rows{ 3 };
-	int columns{ 3 };
+	int rows{ 9 };
+	int columns{ 9 };
 	double gridSizeY{ static_cast<double>(ofGetHeight()) / rows };
 	double gridSizeX{ static_cast<double>(ofGetWidth()) / columns };
 
@@ -31,7 +31,7 @@ private:
 	std::vector<std::vector<bool>> image{ static_cast<vector<vector<bool>>::size_type>(rows),  std::vector<bool>(columns, false) };
 
 	void drawPixels(std::vector<std::vector<bool>> pixels, double width, double height);
-	void saveImage(std::vector<std::vector<bool>> pixels);
+	void saveImage(std::vector<std::vector<bool>> pixels) const;
 	void loadImage();
 };
 
